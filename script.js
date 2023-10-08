@@ -7,10 +7,10 @@ const flagBase = document.querySelector("#currency-base-flag");
 const flagDestiny = document.querySelector("#currency-destiny-flag");
 
 // Valores das moedas
-const dollarToday = 5.14;
-const euroToday = 5.44;
-const libraToday = 6.29;
-const realToday = 1.0;
+let dollarToday;
+let euroToday;
+let libraToday;
+let realToday = 1.0;
 
 //Valores para referência
 const referenceBase = document.querySelector("#amount-select-selected");
@@ -21,140 +21,148 @@ const referenceDestinyFlag = document.querySelector("#amount-to-convert");
 
 //Funções
 
+async function getCurrencies() {
+	let req = await fetch(
+		"https://brapi.dev/api/v2/currency?currency=USD-BRL%2CEUR-BRL%2CGBP-BRL"
+	);
+	let json = await req.json();
+
+	dollarToday = json.currency[0].high;
+	euroToday = json.currency[1].high;
+	libraToday = json.currency[2].high;
+	console.log(json.currency[0].high);
+}
+getCurrencies();
+
 function convertValues() {
 	const amountToConvert = document.querySelector("#amount-value");
 	const amountConverted = document.querySelector("#amount-value-converted");
 
-    let amountFormated = amountToConvert.value;
-    const amountBeforeFormated = amountFormated
+	let amountFormated = amountToConvert.value;
+	const amountBeforeFormated = amountFormated;
 
-    
-	if (currencyBase.value == "brl" || currencyBase.value == "eur" || currencyBase.value == "usd" || currencyBase.value == "gbp") {
+	if (
+		currencyBase.value == "brl" ||
+		currencyBase.value == "eur" ||
+		currencyBase.value == "usd" ||
+		currencyBase.value == "gbp"
+	) {
+		//BRL
+		if (currencyDestiny.value == "brl") {
+			console.log("Entrou no IF do destino BRL");
+			if (currencyBase.value == "usd") {
+				amountConverted.value = new Intl.NumberFormat("pt-BR", {
+					style: "currency",
+					currency: "BRL",
+				}).format(amountFormated * dollarToday);
+			}
+			if (currencyBase.value == "eur") {
+				amountConverted.value = new Intl.NumberFormat("pt-BR", {
+					style: "currency",
+					currency: "BRL",
+				}).format(amountFormated * euroToday);
+			}
+			if (currencyBase.value == "gbp") {
+				amountConverted.value = new Intl.NumberFormat("pt-BR", {
+					style: "currency",
+					currency: "BRL",
+				}).format(amountFormated * libraToday);
+			}
+			if (currencyBase.value == "brl") {
+				amountConverted.value = new Intl.NumberFormat("pt-BR", {
+					style: "currency",
+					currency: "BRL",
+				}).format(amountFormated * realToday);
+			}
+		}
 
-        //BRL
-        if(currencyDestiny.value == "brl"){
-            console.log("Entrou no IF do destino BRL")
-            if(currencyBase.value == "usd"){
-                amountConverted.value = new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                }).format(amountFormated * dollarToday);
-            }
-            if(currencyBase.value == "eur"){
-                amountConverted.value = new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                }).format(amountFormated * euroToday);
-            }
-            if(currencyBase.value == "gbp"){
-                amountConverted.value = new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                }).format(amountFormated * libraToday);
-            }
-            if(currencyBase.value == "brl"){
-                amountConverted.value = new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                }).format(amountFormated * realToday);
-            }
-        }
+		//USD
+		if (currencyDestiny.value == "usd") {
+			console.log("Entrou no IF do destino USD");
+			if (currencyBase.value == "usd") {
+				amountConverted.value = new Intl.NumberFormat("en-US", {
+					style: "currency",
+					currency: "USD",
+				}).format(amountFormated);
+			}
+			if (currencyBase.value == "eur") {
+				amountConverted.value = new Intl.NumberFormat("en-US", {
+					style: "currency",
+					currency: "USD",
+				}).format(amountFormated / euroToday);
+			}
+			if (currencyBase.value == "gbp") {
+				amountConverted.value = new Intl.NumberFormat("en-US", {
+					style: "currency",
+					currency: "USD",
+				}).format(amountFormated / libraToday);
+			}
+			if (currencyBase.value == "brl") {
+				amountConverted.value = new Intl.NumberFormat("en-US", {
+					style: "currency",
+					currency: "USD",
+				}).format(amountFormated / dollarToday);
+			}
+		}
 
-        //USD
-        if(currencyDestiny.value == "usd"){
-            console.log("Entrou no IF do destino USD")
-            if(currencyBase.value == "usd"){
-                amountConverted.value = new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                }).format(amountFormated);
-            }
-            if(currencyBase.value == "eur"){
-                amountConverted.value = new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                }).format(amountFormated / euroToday);
-            }
-            if(currencyBase.value == "gbp"){
-                amountConverted.value = new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                }).format(amountFormated / libraToday);
-            }
-            if(currencyBase.value == "brl"){
-                amountConverted.value = new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                }).format(amountFormated / dollarToday);
-            }
-        }
-	
-        //EUR
-        if(currencyDestiny.value == "eur"){
-            console.log("Entrou no IF do destino EUR")
-            if(currencyBase.value == "usd"){
-                amountConverted.value = new Intl.NumberFormat("pt-PT", {
-                    style: "currency",
-                    currency: "EUR",
-                }).format(amountFormated * euroToday / dollarToday);
-            }
-            if(currencyBase.value == "eur"){
-                amountConverted.value = new Intl.NumberFormat("pt-PT", {
-                    style: "currency",
-                    currency: "EUR",
-                }).format(amountFormated);
-            }
-            if(currencyBase.value == "gbp"){
-                amountConverted.value = new Intl.NumberFormat("pt-PT", {
-                    style: "currency",
-                    currency: "EUR",
-                }).format(amountFormated * euroToday / libraToday);
-            }
-            if(currencyBase.value == "brl"){
-                amountConverted.value = new Intl.NumberFormat("pt-PT", {
-                    style: "currency",
-                    currency: "EUR",
-                }).format(amountFormated / euroToday);
-            }
-        }
+		//EUR
+		if (currencyDestiny.value == "eur") {
+			console.log("Entrou no IF do destino EUR");
+			if (currencyBase.value == "usd") {
+				amountConverted.value = new Intl.NumberFormat("pt-PT", {
+					style: "currency",
+					currency: "EUR",
+				}).format((amountFormated * euroToday) / dollarToday);
+			}
+			if (currencyBase.value == "eur") {
+				amountConverted.value = new Intl.NumberFormat("pt-PT", {
+					style: "currency",
+					currency: "EUR",
+				}).format(amountFormated);
+			}
+			if (currencyBase.value == "gbp") {
+				amountConverted.value = new Intl.NumberFormat("pt-PT", {
+					style: "currency",
+					currency: "EUR",
+				}).format((amountFormated * euroToday) / libraToday);
+			}
+			if (currencyBase.value == "brl") {
+				amountConverted.value = new Intl.NumberFormat("pt-PT", {
+					style: "currency",
+					currency: "EUR",
+				}).format(amountFormated / euroToday);
+			}
+		}
 
-        //GBP
-        if(currencyDestiny.value == "gbp"){
-            console.log("Entrou no IF do destino GBP")
-            if(currencyBase.value == "usd"){
-                amountConverted.value = new Intl.NumberFormat("en-UK", {
-                    style: "currency",
-                    currency: "GBP",
-                }).format(amountFormated * libraToday / dollarToday);
-            }
-            if(currencyBase.value == "eur"){
-                amountConverted.value = new Intl.NumberFormat("en-UK", {
-                    style: "currency",
-                    currency: "GBP",
-                }).format(amountFormated * libraToday / euroToday);
-            }
-            if(currencyBase.value == "gbp"){
-                amountConverted.value = new Intl.NumberFormat("en-UK", {
-                    style: "currency",
-                    currency: "GBP",
-                }).format(amountFormated);
-            }
-            if(currencyBase.value == "brl"){
-                amountConverted.value = new Intl.NumberFormat("en-UK", {
-                    style: "currency",
-                    currency: "GBP",
-                }).format(amountFormated / libraToday);
-            }
-        }
-    
-    
-    }
-
-    // amountToConvert.value = new Intl.NumberFormat("pt-BR", {
-    //     currency: "BRL"
-    // }).format(amountBeforeFormated);
-
-
+		//GBP
+		if (currencyDestiny.value == "gbp") {
+			console.log("Entrou no IF do destino GBP");
+			if (currencyBase.value == "usd") {
+				amountConverted.value = new Intl.NumberFormat("en-UK", {
+					style: "currency",
+					currency: "GBP",
+				}).format((amountFormated * libraToday) / dollarToday);
+			}
+			if (currencyBase.value == "eur") {
+				amountConverted.value = new Intl.NumberFormat("en-UK", {
+					style: "currency",
+					currency: "GBP",
+				}).format((amountFormated * libraToday) / euroToday);
+			}
+			if (currencyBase.value == "gbp") {
+				amountConverted.value = new Intl.NumberFormat("en-UK", {
+					style: "currency",
+					currency: "GBP",
+				}).format(amountFormated);
+			}
+			if (currencyBase.value == "brl") {
+				amountConverted.value = new Intl.NumberFormat("en-UK", {
+					style: "currency",
+					currency: "GBP",
+				}).format(amountFormated / libraToday);
+			}
+		}
+	}
 }
 
 function flagUpdate() {
@@ -297,7 +305,7 @@ function referenceUpdate() {
 		).toFixed(2);
 		referenceDestinyFlag.innerHTML = "BRL";
 	}
-    convertValues()
+	convertValues();
 }
 
 convertButton.addEventListener("click", convertValues);
