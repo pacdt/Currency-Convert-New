@@ -27,10 +27,10 @@ async function getCurrencies() {
 	);
 	let json = await req.json();
 
-	dollarToday = json.currency[0].high;
-	euroToday = json.currency[1].high;
-	libraToday = json.currency[2].high;
-	console.log(json.currency[0].high);
+	dollarToday = json.currency[0].bidPrice;
+	euroToday = json.currency[1].bidPrice;
+	libraToday = json.currency[2].bidPrice;
+	console.log(json.currency[0].bidPrice);
 }
 getCurrencies();
 
